@@ -5,12 +5,14 @@ public class ArrivalWaitZone extends WaitZone {
 		super(maxShips);
 	}
 	
-	private void ArrivalMessage(Ship ship){
-		System.out.println(ship + "arrives at arrival zone");
+	public void ArrivalMessage(Ship ship){
+		System.out.println(ship + " arrives at arrival zone");
 	}
 	
-	private void DepartureMessage(Ship ship){
-		System.out.println(ship + "departs from departure zone");
+	@Override
+	public void DepartureMessage(Ship ship){
+		System.out.println(ship + " departs arrival zone");
 	}
+	
 
 }

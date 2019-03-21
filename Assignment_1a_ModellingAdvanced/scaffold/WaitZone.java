@@ -47,45 +47,33 @@ public class WaitZone {
 		ships.add(ship);
 		// notify pilots looking for a ship potentially!
 		notifyAll();
-		ArrivalMessage( ship);
+		ArrivalMessage(ship);
 	}
 	
-	private void ArrivalMessage(Ship ship){
-		System.out.println(ship + "arrives at a wait zone");
+	public void ArrivalMessage(Ship ship){
+		System.out.println(ship + " arrives at a wait zone");
 	}
 	
-	private void DepartureMessage(Ship ship){
-		System.out.println(ship + "departs from a wait zone");
+	public void DepartureMessage(Ship ship){
+		System.out.println(ship + " departs from a wait zone");
 	}
 	
 	public synchronized void depart(Ship ship) {
+		// note this should never happen, but just checking anyway.
 		while (!ships.contains(ship)) {
+			System.out.println("Error: Ship asked to depart that wasn't in port in Waitzone.depart()");
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 		ships.remove(ship);
+		// notify all in case other ships waiting to enter the waitzone.
 		notifyAll();
-		DepartureMessage( ship);
+		DepartureMessage(ship);
 	}
 
-	public synchronized void depart() {
-		while (ships.size() <= 0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		notifyAll();
-		ships.remove(0);
-		
-	}
 	
 }

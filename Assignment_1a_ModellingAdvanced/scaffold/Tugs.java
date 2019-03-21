@@ -29,5 +29,9 @@ public class Tugs {
 		notifyAll();
 	}
 	
+	public int getNumTugsRemaining() {
+		return numFreeTugs;
+	}
+	
 	
 }

@@ -8,19 +8,19 @@
 public class Consumer extends Thread {
 
     // the wait zone from which cargo ships depart
-    private WaitZone departureZone;
+    private DepartureWaitZone departureZone;
 
     // creates a new consumer for the given wait zone
     Consumer(WaitZone newDepartureZone) {
-        this.departureZone = newDepartureZone;
+        this.departureZone = (DepartureWaitZone)newDepartureZone;
     }
 
     // repeatedly collect waiting ships from the departure zone
     public void run() {
         while (!isInterrupted()) {
             try {
-                // remove a vessel that is in the departure wait zone
-                departureZone.depart();
+                // remove a vessel that is in the departure wait zone from the simulation
+                departureZone.removeOneShip();
 
                 // let some time pass before the next departure
                 sleep(Params.departureLapse());

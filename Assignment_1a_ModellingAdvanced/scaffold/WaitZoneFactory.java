@@ -10,8 +10,8 @@ public  class WaitZoneFactory {
 		case ("berth"):
 			return new BerthWaitZone(Params.NUM_SHIPS_BERTH_ZONE);
 		default: 
+			System.out.println("parameter not recognised for wait zone, defaulting to arrival zone");
 			return new ArrivalWaitZone(Params.NUM_SHIPS_ARRIVAL_ZONE);
-		
 		}
 	}
 }

@@ -18,6 +18,7 @@ public class BerthWaitZone extends WaitZone {
 			
 		}
 		waitShieldDown();
+		DepartureMessage(ship);
 		ships.remove(ship);
 	}
 
@@ -38,6 +39,15 @@ public class BerthWaitZone extends WaitZone {
 	public synchronized void setShieldUp(Boolean shieldUp) {
 		this.shieldUp = shieldUp;
 		notifyAll();
+	}
+	
+	
+	public void ArrivalMessage(Ship ship){
+		System.out.println(ship + " docks at berth");
+	}
+	
+	public void DepartureMessage(Ship ship){
+		System.out.println(ship + " undocks from berth");
 	}
 	
 }
