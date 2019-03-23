@@ -12,27 +12,7 @@ public class WaitZone {
 		this.ships =  new ArrayList<>();
 	}
 
-	public synchronized Ship allocatePilot() {
-		while (findUnpilotedShip() == null) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		return findUnpilotedShip();
-	}
 	
-	private Ship findUnpilotedShip() {
-		for (Ship ship : ships) {
-			if (ship.getPilot() == null) {
-				return ship;
-			}
-		}
-		return null;
-	}
 	
 	public synchronized void arrive (Ship ship) {
 		while (ships.size() >= MAX_NUM_SHIPS) {
@@ -45,23 +25,21 @@ public class WaitZone {
 			
 		}
 		ships.add(ship);
-		// notify pilots looking for a ship potentially! (if this is an arrival zone)
-		notifyAll();
-		ArrivalMessage(ship);
+		arrivalMessage(ship);
 	}
 	
-	public void ArrivalMessage(Ship ship){
+	public void arrivalMessage(Ship ship){
 		System.out.println(ship + " arrives at a wait zone");
 	}
 	
-	public void DepartureMessage(Ship ship){
+	public void departureMessage(Ship ship){
 		System.out.println(ship + " departs from a wait zone");
 	}
 	
 	public synchronized void depart(Ship ship) {
 		// note this should never happen, but just checking anyway.
 		while (!ships.contains(ship)) {
-			System.out.println("Error: Ship asked to depart that wasn't in port in Waitzone.depart()");
+			System.out.println("Error:"+ ship + " asked to depart but wasn't in port. At Waitzone.depart()");
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -72,7 +50,7 @@ public class WaitZone {
 		ships.remove(ship);
 		// notify all in case other ships waiting to enter the waitzone.
 		notifyAll();
-		DepartureMessage(ship);
+		departureMessage(ship);
 	}
 
 	

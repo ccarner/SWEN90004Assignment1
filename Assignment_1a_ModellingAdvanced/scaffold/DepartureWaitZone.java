@@ -16,15 +16,16 @@ public class DepartureWaitZone extends WaitZone {
 			
 		}
 		notifyAll();
+		departureMessage(ships.get(0));
 		ships.remove(0);
 		
 	}
 	
-	public void ArrivalMessage(Ship ship){
-		System.out.println(ship + " arrives at departure zone");
+	public void arrivalMessage(Ship ship){
+		// no arrival message for departure zone
 	}
 	
-	public void DepartureMessage(Ship ship){
+	public void departureMessage(Ship ship){
 		System.out.println(ship + " departs departure zone");
 	}
 

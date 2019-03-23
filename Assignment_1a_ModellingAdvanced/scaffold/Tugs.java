@@ -14,9 +14,8 @@ public class Tugs {
 	}
 	
 	
-	public synchronized int requestTugs(int numTugsRequested) {
-		// FIX THIS SO THAT when a ship that's IN the berth it can still recruit tugs.
-		//while (numTugsRequested > unconditionallyFreeTugs()) {
+	public synchronized int requestTugs(int numTugsRequested, Ship ship, Pilot pilot) {
+		while (numTugsRequested > determineFreeTugs(ship)) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -25,19 +24,29 @@ public class Tugs {
 			}
 		}
 		numFreeTugs -= numTugsRequested;
+		System.out.println(""+ pilot + " acquires " + numTugsRequested + " tugs (" + numFreeTugs + " available).");
 		return numTugsRequested;
 	}
 	
-	private int unconditionallyFreeTugs() {
-		if (berth.freeSpots() != 0) {
-			return numFreeTugs;
+	private int determineFreeTugs(Ship ship) {
+		if (ship.isLoaded()) {
+			// the ship hasn't docked + unloaded yet
+			if (berth.freeSpots() != 0) {
+				// there's an empty berth, so let this ship take the tugs for now,
+				// can't deadlock as long as DOCKING_TUGS is >= UNDOCKING_TUGS
+				return numFreeTugs;
+			} else {
+				return numFreeTugs - Params.UNDOCKING_TUGS;
+			}
 		} else {
-			return numFreeTugs - Params.DOCKING_TUGS;
+			//ship is unloaded and waiting to leave the berth
+			return numFreeTugs;
 		}
 	}
 	
-	public synchronized void returnTugs(int numTugsReturned) {
+	public synchronized void returnTugs(int numTugsReturned, Pilot pilot) {
 		numFreeTugs += numTugsReturned;
+		System.out.println(""+ pilot + " releases " + numTugsReturned + " tugs (" + numFreeTugs + " available).");
 		notifyAll();
 	}
 	

@@ -17,12 +17,12 @@ public class Ship {
     private static int nextId = 1;
 
     // a flag indicating whether the ship is currently loaded
-    boolean loaded;
+    private boolean loaded;
 
     // create a new vessel with a given identifier
     private Ship(int id) {
         this.id = id;
-        this.loaded = true;
+        this.setLoaded(true);
     }
 
     // get a new Ship instance with a unique identifier
@@ -42,4 +42,14 @@ public class Ship {
 	public void setPilot(Pilot pilot) {
 		this.pilot = pilot;
 	}
+
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
+	
+	
 }

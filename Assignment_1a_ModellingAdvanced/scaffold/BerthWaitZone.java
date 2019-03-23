@@ -10,15 +10,15 @@ public class BerthWaitZone extends WaitZone {
 	public synchronized void depart(Ship ship) {
 		while (!ships.contains(ship)) {
 			try {
+				System.out.println("Warning: Shouldn't get here! BerthWaitZone.depart();");
 				wait();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
+		// can't undock while the shield is up
 		waitShieldDown();
-		
 		
 		try {
 			Thread.sleep(Params.UNDOCKING_TIME);
@@ -26,7 +26,7 @@ public class BerthWaitZone extends WaitZone {
 			e.printStackTrace();
 		}
 		
-		DepartureMessage(ship);
+		departureMessage(ship);
 		ships.remove(ship);
 	}
 
@@ -62,13 +62,13 @@ public class BerthWaitZone extends WaitZone {
 	}
    
    public void dock(Ship ship) {
+	   arrivalMessage(ship);
 	   try {
 			Thread.sleep(Params.DOCKING_TIME);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	   ArrivalMessage(ship);
 	}
    
 	public synchronized void setShieldUp(Boolean shieldUp) {
@@ -81,11 +81,11 @@ public class BerthWaitZone extends WaitZone {
 		return (MAX_NUM_SHIPS- ships.size());
 	}
 	
-	public void ArrivalMessage(Ship ship){
+	public void arrivalMessage(Ship ship){
 		System.out.println(ship + " docks at berth");
 	}
 	
-	public void DepartureMessage(Ship ship){
+	public void departureMessage(Ship ship){
 		System.out.println(ship + " undocks from berth");
 	}
 	
@@ -97,7 +97,7 @@ public class BerthWaitZone extends WaitZone {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(ship + " being unloaded");
+		ship.setLoaded(false);
 	}
 
 	

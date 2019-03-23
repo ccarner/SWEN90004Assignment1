@@ -21,15 +21,17 @@ public class Pilot extends Thread {
 	public void run() {
 		
 		while(true) {
-			ship = arrivalZone.allocatePilot();
+			
+			while((ship = arrivalZone.allocatePilot()) == null) {
+				// extra safeguard to prevent null pointer exceptions which occasionally occurred
+			}
+			
 			ship.setPilot(this);
 			
-			System.out.println("Pilot " + pilotNumber + " acquires " + ship);
+			System.out.println("Pilot " + pilotNumber + " acquires " + ship +".");
 			
-			tugs.requestTugs(Params.DOCKING_TUGS);
+			tugs.requestTugs(Params.DOCKING_TUGS,ship,this);
 			numTugsPossessed += Params.DOCKING_TUGS;
-			
-			System.out.println("Pilot " + pilotNumber + " acquires " + Params.DOCKING_TUGS + " tugs (" + tugs.getNumTugsRemaining() + " available).");
 			
 			try {
 				sleep(Params.TRAVEL_TIME);
@@ -41,24 +43,16 @@ public class Pilot extends Thread {
 			
 			berth.arrive(ship);
 			
-			berth.dock(ship);
+			berth.dock(ship);	
 			
 			releaseAllTugs();
 			
 			berth.unload(ship);
 			
-			tugs.requestTugs(Params.UNDOCKING_TUGS);
-			
-			berth.dock(ship);
-			
-			numTugsPossessed += Params.DOCKING_TUGS;
-			
-			System.out.println("Pilot " + pilotNumber + " releases " + Params.NUM_TUGS_RELEASE_BERTH + " tugs (" + tugs.getNumTugsRemaining() + " available).");
-			
-			// here change it so that we re-acquire more tugs?
+			numTugsPossessed += tugs.requestTugs(Params.UNDOCKING_TUGS,ship,this);
 			
 			berth.depart(ship);
-			System.out.println("Pilot " + pilotNumber + " undocks from berth");
+			
 			
 			try {
 				sleep(Params.TRAVEL_TIME);
@@ -70,8 +64,6 @@ public class Pilot extends Thread {
 		
 			releaseAllTugs();
 			
-			System.out.println("Pilot " + pilotNumber + " releases " + Params.UNDOCKING_TUGS + " tugs (" + tugs.getNumTugsRemaining() + " available).");
-			
 			// DONT NEED TO DEPART FROM DEPARTURE ZONE!
 			// done by the 'consumer'
 			
@@ -81,7 +73,11 @@ public class Pilot extends Thread {
 	}
 
 	public void releaseAllTugs() {
-		tugs.returnTugs(numTugsPossessed);
+		tugs.returnTugs(numTugsPossessed, this);
 		numTugsPossessed = 0;		
+	}
+	
+	public String toString() {
+		return "pilot " + pilotNumber;
 	}
 }

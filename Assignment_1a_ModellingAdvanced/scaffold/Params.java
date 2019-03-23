@@ -6,18 +6,15 @@ class Params {
 	
 	static final int NUM_SHIPS_DEPARTURE_ZONE = 1;
 	
-	static final int NUM_SHIPS_BERTH_ZONE = 1;
-	
-	//remove this! I inserted
-	static final int NUM_TUGS_RELEASE_BERTH = 1;
-	
+	static final int NUM_SHIPS_BERTH_ZONE = 2;
+		
     static final int NUM_PILOTS = 2;
 
     static final int NUM_TUGS = 5;
 
-    static final int DOCKING_TUGS = 3;
+    static final int DOCKING_TUGS = 2;
 
-    static final int UNDOCKING_TUGS = 2;
+    static final int UNDOCKING_TUGS = 3;
 
     static final int DOCKING_TIME = 800;
 
