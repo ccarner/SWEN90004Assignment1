@@ -6,13 +6,17 @@
 public class Tugs {
 	
 	private int numFreeTugs;
+	private BerthWaitZone berth;
 	
-	public Tugs (int numTugs) {
+	public Tugs (int numTugs, BerthWaitZone berth) {
 		numFreeTugs = numTugs;
+		this.berth=berth;
 	}
 	
+	
 	public synchronized int requestTugs(int numTugsRequested) {
-		while (numTugsRequested > numFreeTugs) {
+		// FIX THIS SO THAT when a ship that's IN the berth it can still recruit tugs.
+		//while (numTugsRequested > unconditionallyFreeTugs()) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -22,6 +26,14 @@ public class Tugs {
 		}
 		numFreeTugs -= numTugsRequested;
 		return numTugsRequested;
+	}
+	
+	private int unconditionallyFreeTugs() {
+		if (berth.freeSpots() != 0) {
+			return numFreeTugs;
+		} else {
+			return numFreeTugs - Params.DOCKING_TUGS;
+		}
 	}
 	
 	public synchronized void returnTugs(int numTugsReturned) {

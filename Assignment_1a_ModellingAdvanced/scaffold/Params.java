@@ -8,6 +8,7 @@ class Params {
 	
 	static final int NUM_SHIPS_BERTH_ZONE = 1;
 	
+	//remove this! I inserted
 	static final int NUM_TUGS_RELEASE_BERTH = 1;
 	
     static final int NUM_PILOTS = 2;

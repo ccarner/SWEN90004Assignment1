@@ -21,7 +21,7 @@ public class Main {
         WaitZone arrivalZone = WaitZoneFactory.getWaitZone("arrival");
         WaitZone departureZone = WaitZoneFactory.getWaitZone("departure");
         WaitZone berth = WaitZoneFactory.getWaitZone("berth");
-        Tugs tugs = new Tugs(Params.NUM_TUGS);
+        Tugs tugs = new Tugs(Params.NUM_TUGS, (BerthWaitZone)berth);
 
         // generate the producer, consumer and operator processes
         Producer producer = new Producer(arrivalZone);

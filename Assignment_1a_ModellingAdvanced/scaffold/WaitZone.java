@@ -45,7 +45,7 @@ public class WaitZone {
 			
 		}
 		ships.add(ship);
-		// notify pilots looking for a ship potentially!
+		// notify pilots looking for a ship potentially! (if this is an arrival zone)
 		notifyAll();
 		ArrivalMessage(ship);
 	}
@@ -74,6 +74,10 @@ public class WaitZone {
 		notifyAll();
 		DepartureMessage(ship);
 	}
+
+	
+
+	
 
 	
 }
