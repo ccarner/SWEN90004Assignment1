@@ -33,13 +33,13 @@ public class Pilot extends Thread {
 			tugs.requestTugs(Params.DOCKING_TUGS,ship,this);
 			numTugsPossessed += Params.DOCKING_TUGS;
 			
+			arrivalZone.depart(ship);
+			
 			try {
 				sleep(Params.TRAVEL_TIME);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
-			
-			arrivalZone.depart(ship);
 			
 			berth.arrive(ship);
 			
@@ -51,8 +51,8 @@ public class Pilot extends Thread {
 			
 			numTugsPossessed += tugs.requestTugs(Params.UNDOCKING_TUGS,ship,this);
 			
+			// MAKE IT SO THAT WE HAVE SEPARTE "undock" METHOD
 			berth.depart(ship);
-			
 			
 			try {
 				sleep(Params.TRAVEL_TIME);
