@@ -1,6 +1,23 @@
-
+/**
+ * handles creation logic for Waitzones; 'arrival', 'berth' or 'departure' zones
+ * @author ccarn
+ *
+ */
 public  class WaitZoneFactory {
 	
+	/** message printed to console when unknown input given */
+	private static String unrecognisedParamMsg = "parameter not recognised for wait " + 
+		"zone : defaulting to arrival zone";
+	
+	/**
+	 * will return a waitzone with appropriate configuration of type requested.
+	 * @param waitZoneType determines wait zone type returned
+	 * - "arrival" returns an arrival zone
+	 * - "departure" returns a departure zone
+	 * - "berth" returns a berth zone
+	 * - other input will default to an arrival zone
+	 * @return WaitZone class
+	 */
 	public static WaitZone getWaitZone(String waitZoneType) {
 		switch (waitZoneType){
 		case ("arrival"): 
@@ -10,7 +27,7 @@ public  class WaitZoneFactory {
 		case ("berth"):
 			return new BerthWaitZone(Params.NUM_SHIPS_BERTH_ZONE);
 		default: 
-			System.out.println("parameter not recognised for wait zone, defaulting to arrival zone");
+			System.out.println(unrecognisedParamMsg);
 			return new ArrivalWaitZone(Params.NUM_SHIPS_ARRIVAL_ZONE);
 		}
 	}

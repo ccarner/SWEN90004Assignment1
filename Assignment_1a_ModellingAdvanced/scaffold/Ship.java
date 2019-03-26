@@ -41,6 +41,7 @@ public class Ship {
 
 	public void setPilot(Pilot pilot) {
 		this.pilot = pilot;
+		System.out.println("Pilot " + pilot.getPilotNumber() + " acquires " + this +".");
 	}
 
 	public boolean isLoaded() {

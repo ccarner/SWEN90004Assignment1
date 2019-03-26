@@ -1,96 +1,84 @@
-
+/**
+ * Berth of the USS EMAFOR. Ships will dock here and unload. In the process they will
+ * release all of their tugs post docking, and reaquire more to undock. The shield state
+ * is controlled by the Operator class.
+ * @author ccarn
+ *
+ */
 public class BerthWaitZone extends WaitZone {
 
+	/** whether the shield around the berth is currently active */
 	private Boolean shieldUp = false;
 	
 	public BerthWaitZone(int maxShips) {
 		super(maxShips);
 	}
 	
+	/**
+	 * override of depart method: ship waits for shields to go down before departing and
+	 * simulates undocking time.
+	 */
+	@Override
 	public synchronized void depart(Ship ship) {
-		while (!ships.contains(ship)) {
-			try {
-				System.out.println("Warning: Shouldn't get here! BerthWaitZone.depart();");
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if (!ships.contains(ship)) {
+			throw new ShipNotPresentException();
 		}
 		// can't undock while the shield is up
 		waitShieldDown();
 		
-		try {
-			Thread.sleep(Params.UNDOCKING_TIME);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		// simulate undocking time
+		undockSleep();
 		
-		departureMessage(ship);
 		ships.remove(ship);
+		departureMessage(ship);
 	}
-
-	// Added this below since calling berth.wait() from 'operator' threw a 'java.lang.IllegalMonitorStateException'
-
- 
-   private void waitShieldDown() {
-		while(shieldUp) {
-			
+	
+	/**
+	 * override of arrive method: ship waits for shields to go down before arriving and
+	 * simulates undocking time.
+	 */   
+	@Override
+	public synchronized void arrive (Ship ship) {
+		while (freeSpots() <= 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
 		}
-	}
-   
-   // don't allow ships to berth while one still unberthing I think!
-   @Override
-   public synchronized void arrive (Ship ship) {
-		while (ships.size() >= MAX_NUM_SHIPS) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		// add now to ensure no other ship tries to dock while we're berthing
+
 		waitShieldDown();
-		ships.add(ship);		
+		
+		dockSleep();
+		
+		ships.add(ship);
+		arrivalMessage(ship);
 	}
-   
-   public void dock(Ship ship) {
-	   arrivalMessage(ship);
-	   try {
-			Thread.sleep(Params.DOCKING_TIME);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-   
+	
+	/**
+    * Sets state of shield and notifies ships potentially waiting on shield going down
+    * @param shieldUp
+    */
 	public synchronized void setShieldUp(Boolean shieldUp) {
 		this.shieldUp = shieldUp;
 		notifyAll();
 	}
 	
-	// change code to use this conditional for all while loops! also move to the superclass so all waitzones can use!
-	public int freeSpots() {
-		return (MAX_NUM_SHIPS- ships.size());
-	}
-	
+	@Override
 	public void arrivalMessage(Ship ship){
 		System.out.println(ship + " docks at berth");
 	}
 	
+	@Override
 	public void departureMessage(Ship ship){
 		System.out.println(ship + " undocks from berth");
 	}
 	
-	
-	public void unload(Ship ship) {
+	/**
+	 * simulate unloading time by sleeping thread
+	 * @param ship
+	 */
+	public void simulateUnloading(Ship ship) {
 		System.out.println(ship + " being unloaded");	
 		try {
 			Thread.sleep(Params.UNLOADING_TIME);
@@ -99,6 +87,44 @@ public class BerthWaitZone extends WaitZone {
 		}
 		ship.setLoaded(false);
 	}
+
+	/**
+	 * Simulates undock time by sleeping thread.
+	 */
+	private void undockSleep() {
+		try {
+			Thread.sleep(Params.UNDOCKING_TIME);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Simulates undock time by sleeping thread.
+	 */
+   	private void dockSleep() {	
+		try {
+			Thread.sleep(Params.DOCKING_TIME);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+   }
+
+	/**
+	 * Waits thread for shield to go down
+	 */
+   private void waitShieldDown() {
+		while(shieldUp) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+   
+   
+	
 
 	
 	
