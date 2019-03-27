@@ -6,20 +6,25 @@
  */
 public class ArrivalWaitZone extends WaitZone {
 
+	/** create a new arrival waitzone with capacity for maxShips */
 	public ArrivalWaitZone(int maxShips) {
 		super(maxShips);
 	}
 	
+	/**
+	 * prints an arrival message to the console
+	 * @param ship
+	 */
 	@Override
 	public void arrivalMessage(Ship ship){
 		System.out.println(ship + " arrives at arrival zone");
 	}
 	
-	@Override
-	public void departureMessage(Ship ship){
-		// no departure message for arrival zone
-	}
-	
+	/**
+	 * Adds ship to the waitzone if there's room, else makes the ship wait.
+	 * Notifies pilots waiting on a ship.
+	 * @param ship
+	 */
 	@Override
 	public synchronized void arrive (Ship ship) {
 		super.arrive(ship);
@@ -34,6 +39,7 @@ public class ArrivalWaitZone extends WaitZone {
 	 */
 	public synchronized Ship allocatePilot() {
 		while (findUnpilotedShip() == null) {
+			// no ships are in the arrival zone without a pilot
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -50,9 +56,11 @@ public class ArrivalWaitZone extends WaitZone {
 	private Ship findUnpilotedShip() {
 		for (Ship ship : ships) {
 			if (ship.getPilot() == null) {
+				// ship has no pilot, so pass it back
 				return ship;
 			}
 		}
+		// no unpiloted ships present
 		return null;
 	}
 }

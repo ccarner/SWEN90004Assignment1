@@ -6,6 +6,7 @@
  */
 public class DepartureWaitZone extends WaitZone {
 
+	/** create a new deaparture waitzone with capacity for maxShips */
 	public DepartureWaitZone(int maxShips) {
 		super(maxShips);
 	}
@@ -27,8 +28,9 @@ public class DepartureWaitZone extends WaitZone {
 	}
 	
 	/**
-	 * overriden arrive method which notifies the Consumer which could be waiting
-	 * for a ship to arrive in order to remove it.
+	 * Adds ship to the waitzone if there's room, else makes the ship wait.
+	 * Notifies the Consumer which could be waiting for a ship to arrive in
+	 * order to remove it.
 	 */
 	@Override
 	public synchronized void arrive (Ship ship) {
@@ -37,11 +39,10 @@ public class DepartureWaitZone extends WaitZone {
 		notifyAll();
 	}
 	
-	@Override
-	public void arrivalMessage(Ship ship){
-		// no arrival message for departure zone
-	}
-	
+	/**
+	 * prints a departure message to the console
+	 * @param ship
+	 */
 	@Override
 	public void departureMessage(Ship ship){
 		System.out.println(ship + " departs departure zone");

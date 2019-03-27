@@ -10,6 +10,7 @@ public class BerthWaitZone extends WaitZone {
 	/** whether the shield around the berth is currently active */
 	private Boolean shieldUp = false;
 	
+	/** create a new berth waitzone with capacity for maxShips */
 	public BerthWaitZone(int maxShips) {
 		super(maxShips);
 	}
@@ -40,15 +41,17 @@ public class BerthWaitZone extends WaitZone {
 	@Override
 	public synchronized void arrive (Ship ship) {
 		while (freeSpots() <= 0) {
+			// no free spots, make ships wait
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-
+		
 		waitShieldDown();
 		
+		// simulate docking time
 		dockSleep();
 		
 		ships.add(ship);
@@ -64,11 +67,19 @@ public class BerthWaitZone extends WaitZone {
 		notifyAll();
 	}
 	
+	/**
+	 * prints an arrival message to the console
+	 * @param ship
+	 */
 	@Override
 	public void arrivalMessage(Ship ship){
 		System.out.println(ship + " docks at berth");
 	}
 	
+	/**
+	 * prints a departure message to the console
+	 * @param ship
+	 */
 	@Override
 	public void departureMessage(Ship ship){
 		System.out.println(ship + " undocks from berth");
@@ -110,9 +121,9 @@ public class BerthWaitZone extends WaitZone {
 		}
    }
 
-	/**
-	 * Waits thread for shield to go down
-	 */
+   /**
+    * Waits thread for shield to go down
+	*/
    private void waitShieldDown() {
 		while(shieldUp) {
 			try {

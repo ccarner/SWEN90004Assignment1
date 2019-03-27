@@ -3,7 +3,7 @@
  * @author ccarn
  *
  */
-public  class WaitZoneFactory {
+public class WaitZoneFactory {
 	
 	/** message printed to console when unknown input given */
 	private static String unrecognisedParamMsg = "parameter not recognised for wait " + 
@@ -27,6 +27,7 @@ public  class WaitZoneFactory {
 		case ("berth"):
 			return new BerthWaitZone(Params.NUM_SHIPS_BERTH_ZONE);
 		default: 
+			// mistyped string or one not given, print a note to console
 			System.out.println(unrecognisedParamMsg);
 			return new ArrivalWaitZone(Params.NUM_SHIPS_ARRIVAL_ZONE);
 		}

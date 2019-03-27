@@ -1,10 +1,9 @@
+import java.util.ArrayList;
+
 /**
  * Parent class of all waitzones, has a maximum number of ships it can have waiting in it
  * and default wait+depart methods that add and remove ships to the waitzone.
  */
-import java.util.ArrayList;
-
-//superclass for types of waitzones
 public class WaitZone {
 
 	/** max number of ships in a waitzone */
@@ -13,6 +12,7 @@ public class WaitZone {
 	/** list of all ships in the waitzone*/
 	protected ArrayList<Ship> ships;
 	
+	/** create a new waitzone with capacity for maxShips */
 	public WaitZone (int maxShips) {
 		MAX_NUM_SHIPS = maxShips;
 		this.ships =  new ArrayList<>();
@@ -24,30 +24,32 @@ public class WaitZone {
 	 */
 	public synchronized void arrive (Ship ship) {
 		while (freeSpots() <= 0) {
+			// no room for more ships, make new ships wait
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+		// now we have room
 		ships.add(ship);
 		arrivalMessage(ship);
 	}
 	
 	/**
-	 * prints an arrival message to the console
+	 * prints an arrival message to the console. Default is no message.
 	 * @param ship
 	 */
 	public void arrivalMessage(Ship ship){
-		System.out.println(ship + " arrives at a wait zone");
+		// default implementation is to not print anything.
 	}
 	
-	 /**
-	  * prints a departure message to the console
-	  * @param ship
-	  */
+	/**
+	 * prints a departure message to the console. Default is no message.
+	 * @param ship
+	 */
 	public void departureMessage(Ship ship){
-		System.out.println(ship + " departs from a wait zone");
+		// default implementation is to not print anything.
 	}
 	
 	/**
@@ -57,6 +59,8 @@ public class WaitZone {
 	 */
 	public synchronized void depart(Ship ship) {
 		if (!ships.contains(ship)) {
+			// error: a ship has been asked to depart the waitrzone, but wasn't in it
+			// to begin with!
 			throw new ShipNotPresentException();
 		}
 		ships.remove(ship);
@@ -66,7 +70,7 @@ public class WaitZone {
 	}
 
 	/**
-	 * returns the number of free spots in the waitzone
+	 * Returns the number of free spots in the waitzone
 	 */
 	public int freeSpots() {
 		return MAX_NUM_SHIPS- ships.size();

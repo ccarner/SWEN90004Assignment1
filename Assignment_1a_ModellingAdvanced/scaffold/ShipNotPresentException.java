@@ -6,6 +6,7 @@
  */
 public class ShipNotPresentException extends RuntimeException {
 	
+	/** default error message */
 	final static String defaultMsg = "Error: tried to 'depart' ship not in the waitzone";
 	
 	public ShipNotPresentException(String message) {
