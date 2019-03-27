@@ -34,7 +34,7 @@ public class Main {
         // generate and start the individual pilot processes
         for (int i = 0; i < Params.NUM_PILOTS; i++) {
         	// WHY DOES IT PASS IN 'i' as a parameter??????
-            pilot[i] = new Pilot(i, arrivalZone, departureZone, tugs, berth);
+            pilot[i] = new Pilot(i, arrivalZone, departureZone, berth, tugs);
             pilot[i].start();
         }
 

@@ -9,6 +9,7 @@ public class Operator extends Thread{
 	/** berth which the shield is protecting */
 	private WaitZone berth;
 	
+	/** create a new operator for controlling the shield of the given berth parameter */
 	public Operator(WaitZone berth) {
 		this.berth=berth;
 	}

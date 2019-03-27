@@ -32,6 +32,8 @@ public class BerthWaitZone extends WaitZone {
 		
 		ships.remove(ship);
 		departureMessage(ship);
+		// notify ships waiting to arrive
+		notifyAll();
 	}
 	
 	/**
@@ -73,7 +75,7 @@ public class BerthWaitZone extends WaitZone {
 	 */
 	@Override
 	public void arrivalMessage(Ship ship){
-		System.out.println(ship + " docks at berth");
+		System.out.println(ship + " docks at berth.");
 	}
 	
 	/**
@@ -82,7 +84,7 @@ public class BerthWaitZone extends WaitZone {
 	 */
 	@Override
 	public void departureMessage(Ship ship){
-		System.out.println(ship + " undocks from berth");
+		System.out.println(ship + " undocks from berth.");
 	}
 	
 	/**
@@ -90,7 +92,7 @@ public class BerthWaitZone extends WaitZone {
 	 * @param ship
 	 */
 	public void simulateUnloading(Ship ship) {
-		System.out.println(ship + " being unloaded");	
+		System.out.println(ship + " being unloaded.");	
 		try {
 			Thread.sleep(Params.UNLOADING_TIME);
 		} catch (InterruptedException e) {

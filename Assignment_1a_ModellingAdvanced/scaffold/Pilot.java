@@ -24,8 +24,16 @@ public class Pilot extends Thread {
 	private int numTugsPossessed = 0;
 	
 	
-	public Pilot(int i, WaitZone arrivalZone, WaitZone departureZone, Tugs tugs,
-			WaitZone berth) {
+	/** create new pilot with a given ID number, and give it access to the waitzones in
+	 * the simulation and the tug controller
+	 * @param i pilot number to be assigned
+	 * @param arrivalZone arrival zone in simulation where pilots will collect ships
+	 * @param departureZone departure zone in simulation where pilots will leave ships
+	 * @param berth berth zone in simulation where pilots will dock
+	 * @param tugs tug controller pilots will ask for tugs/return tugs to
+	 */
+	public Pilot(int i, WaitZone arrivalZone, WaitZone departureZone, WaitZone berth,
+			Tugs tugs) {
 		this.pilotNumber = i;
 		this.arrivalZone = (ArrivalWaitZone) arrivalZone;
 		this.departureZone = (DepartureWaitZone) departureZone;

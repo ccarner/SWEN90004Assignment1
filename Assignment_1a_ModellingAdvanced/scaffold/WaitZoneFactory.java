@@ -27,7 +27,8 @@ public class WaitZoneFactory {
 		case ("berth"):
 			return new BerthWaitZone(Params.NUM_SHIPS_BERTH_ZONE);
 		default: 
-			// mistyped string or one not given, print a note to console
+			// mistyped string or not given one... print note to console + default
+			// to arrival zone
 			System.out.println(unrecognisedParamMsg);
 			return new ArrivalWaitZone(Params.NUM_SHIPS_ARRIVAL_ZONE);
 		}
